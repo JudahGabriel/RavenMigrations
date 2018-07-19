@@ -88,41 +88,29 @@ migrationRunner.Run();
 
 Each important part of the migration is numbered:
 
-1. Every migration has to be decorated with the **MigrationAttribute**, and needs to be seeded it with a *long* value. For smaller teams, a simple integer will do (ex. the first patch has Migration(1), then the second patch has Migration(2), etc.) If you're working with a larger team, where patch numbers might collide, we recommend you seed it with a **DateTime** stamp of yyyyMMddHHmmss ex. 20131031083545. This helps keeps teams from guessing and conflicting on the next migration number.
+1. Every migration has to be decorated with the **MigrationAttribute**, and needs to be seeded it with a *long* value. For smaller teams, a simple integer will do (ex. the first patch has [Migration(1)], then the second patch has [Migration(2)], etc.) If you're working with a larger team, where patch numbers might collide, we recommend you seed it with a **DateTime** stamp of yyyyMMddHHmmss ex. 20131031083545. This helps keeps teams from guessing and conflicting on the next migration number.
 2. Every migration needs to implement from the base class of **Migration**. This gives you access to base functionality and the ability to implement **Up** and **Down**. It also gives you access to the Raven ``DocumentStore`` and an ``ILogger`` instance.
 3. **Up** is the method that occurs when a migration is executed. As you see above, we are adding a document.
 4. **Down** is the method that occurs when a migration is rolledback. This is not always possible, but if it is, then it most likely will be the reverse of **Up**.
 
 In every migration you have access to the document store, so you are able to do anything you need to your storage engine. This document store is the same as the one your application will use.
 
-### Runner
+### MigrationRunner
 
 Raven Migrations comes with a migration runner. It scans all provided assemblies for any classes implementing the **Migration** base class and then orders them according to their migration value.
 
-After each migration is executed, a document of type **MigrationDocument** is inserted into your database, to insure the next time the runner is executed that migration is not executed again. When a migration is rolled back the document is removed.
+After each migration is executed, a document of type **MigrationRecord** is inserted into your database, to insure the next time the runner is executed that migration is not executed again. When a migration is rolled back the document is removed.
 
 You can modify the runner options by declaring a **MigrationOptions** instance and passing it to the runner.
 
 ```csharp
 public class MigrationOptions
 {
-    public MigrationOptions()
-    {
-         Direction = Directions.Up;
-         Assemblies = new List<Assembly>();
-         Profiles = new List<string>();
-         MigrationResolver = new DefaultMigrationResolver();
-         Assemblies = new List<Assembly>();
-         ToVersion = 0;
-         Logger = new ConsoleLogger();
-    }
-
     public Directions Direction { get; set; }
     public IList<Assembly> Assemblies { get; set; }
     public IList<string> Profiles { get; set; }
     public IMigrationResolver MigrationResolver { get; set; }
     public int ToVersion { get; set; }
-    public ILogger Logger { get; set; }
 }
 ```
 
@@ -254,12 +242,19 @@ We recommend you create a folder called Migrations, then name your files accordi
 
 ```
 \Migrations
-    - 001_FirstMigration.cs
-    - 002_SecondMigration.cs
-    - 003_ThirdMigration.cs
+    - 001-FirstMigration.cs
+    - 002-SecondMigration.cs
+    - 003-ThirdMigration.cs
 ```
 
 The advantage to this approach, is that your IDE will order the migrations alpha-numerically allowing you to easily find the first and last migration.
+
+For larger teams, where developers might create conflicting version numbers, we recommend using a yyyyMMddHHmmss Date stamp instead:
+```
+\Migrations
+	- 20180719124632-FirstMigration.cs 
+	- 20180422132112-SecondMigration.cs
+	- 20190912075429-ThirdMigration.cs
 
 ## Contributing
 

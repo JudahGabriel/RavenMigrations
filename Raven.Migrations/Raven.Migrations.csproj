@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>4.0.0</Version>
+    <Version>4.0.1</Version>
     <PackageId>RavenMigrations</PackageId>
     <Authors>Darrel Portzline, Khalid Abuhakmeh, Judah Gabriel Himango</Authors>
     <Company>BitShuva</Company>
@@ -15,7 +15,7 @@
     <PackageProjectUrl>https://github.com/migrating-ravens/RavenMigrations</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/migrating-ravens/RavenMigrations/blob/master/LICENSE.txt</PackageLicenseUrl>
     <PackageTags>ravendb, nosql, migration, schema</PackageTags>
-    <PackageReleaseNotes>Added more extension points and updated the programming model for migrations.</PackageReleaseNotes>
+    <PackageReleaseNotes>Targeting .NET Standard 2.0</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
